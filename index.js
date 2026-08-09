@@ -1,11 +1,22 @@
-import Users from "../dao/Users.dao.js";
-import Pet from "../dao/Pets.dao.js";
-import Adoption from "../dao/Adoption.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-import UserRepository from "../repository/UserRepository.js";
-import PetRepository from "../repository/PetRepository.js";
-import AdoptionRepository from "../repository/AdoptionRepository.js";
+import app, { connectDB } from "./app.js";
 
-export const usersService = new UserRepository(new Users());
-export const petsService = new PetRepository(new Pet());
-export const adoptionsService = new AdoptionRepository(new Adoption());
+const PORT = process.env.PORT || 8080;
+
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server listening on port ${PORT}`);
+      console.log(`📚 Swagger: http://localhost:${PORT}/api/docs`);
+    });
+  } catch (error) {
+    console.error("❌ Error al iniciar el servidor:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
